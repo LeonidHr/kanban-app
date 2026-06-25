@@ -1,0 +1,30 @@
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 0 0 calc(33.333% - 16px);
+  padding: 20px;
+
+  border-radius: 18px;
+
+
+  &--todo {
+    background: #f3f3f3;
+  }
+
+  &--progress {
+    background: #e7f4ff;
+  }
+
+  &--done {
+    background: #edf7e5;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+  }
+}

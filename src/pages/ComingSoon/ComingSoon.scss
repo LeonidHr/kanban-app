@@ -1,0 +1,26 @@
+.coming-soon {
+  display: flex;
+  gap: 20px;
+
+  &__content {
+    min-height: 100vh;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    height: 100%;
+  }
+
+  h1 {
+    margin-bottom: 16px;
+
+    font-size: 48px;
+  }
+
+  p {
+    font-size: 20px;
+    color: #777;
+  }
+}

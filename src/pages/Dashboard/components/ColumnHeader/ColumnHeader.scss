@@ -1,0 +1,68 @@
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 8px 14px;
+
+    background: #f3f3f3;
+    border-radius: 999px;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16px;
+  }
+
+  &__title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f1f1f;
+  }
+
+  &__count {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f3f3f3;
+    border-radius: 50%;
+
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f1f1f;
+  }
+}
+
+.column--todo {
+  .column-header__info,
+  .column-header__count {
+    background: #ececec;
+  }
+}
+
+.column--progress {
+  .column-header__info,
+  .column-header__count {
+    background: #cfe8ff;
+  }
+}
+
+.column--done {
+  .column-header__info,
+  .column-header__count {
+    background: #cdecbf;
+  }
+}
