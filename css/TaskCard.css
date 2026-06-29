@@ -143,19 +143,19 @@ body {
   font-family: inherit;
 }
 .task-card__description::-webkit-input-placeholder {
-  color: #757575;
+  color: #666;
 }
 .task-card__description::-moz-placeholder {
-  color: #757575;
+  color: #666;
 }
 .task-card__description:-ms-input-placeholder {
-  color: #757575;
+  color: #666;
 }
 .task-card__description::-ms-input-placeholder {
-  color: #757575;
+  color: #666;
 }
 .task-card__description::placeholder {
-  color: #757575;
+  color: #666;
 }
 .task-card__footer {
   display: -webkit-box;
@@ -200,8 +200,8 @@ body {
   color: #2f6d2f;
 }
 .task-card__badge--medium {
-  background: #f9e3b0;
-  color: #8b5e00;
+  background: #f5deb0;
+  color: #8a5b00;
 }
 .task-card__badge--high {
   background: #ffd6d6;

@@ -94,7 +94,7 @@ body {
     color: #8b8b8b;
     font-family: inherit;
     &::placeholder {
-      color: #757575;
+      color: #666;
     }
   }
   &__footer {
@@ -135,8 +135,8 @@ body {
     }
 
     &--medium {
-      background: #f9e3b0;
-      color: #8b5e00;
+      background: #f5deb0;
+      color: #8a5b00;
     }
 
     &--high {
