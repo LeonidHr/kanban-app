@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, memo } from "react";
 import {
   GripVertical,
   ArrowLeft,
@@ -7,46 +7,66 @@ import {
 } from "lucide-react";
 
 import autoResize from "../../../../utils/utils";
+import priorities from "../../../../data/priorities";
 
 import "./TaskCard.scss";
-
-const priorities = ["low", "medium", "high"];
 
 function TaskCard({
   task,
   onUpdate,
   onDelete,
   onComplete,
-  onMoveLeft,
-  onMoveRight,
+  onMove,
   dragListeners,
   dragAttributes,
   disableMoveButtons = false,
 }) {
   const [showPriorities, setShowPriorities] = useState(false);
 
-  const updateTitle = (value) => {
-    onUpdate(task.id, {
-      ...task,
-      title: value,
-    });
-  };
+  const updateTask = useCallback(
+    (changes) => {
+      onUpdate(task.id, {
+        ...task,
+        ...changes,
+      });
+  }, [task, onUpdate]);
 
-  const updateDescription = (value) => {
-    onUpdate(task.id, {
-      ...task,
-      description: value,
-    });
-  };
+  const updateTitle = useCallback(
+    (title) => {
+      updateTask({ title });
+    }, [updateTask]
+  );
+    
+  const updateDescription = useCallback(
+    (description) => {
+      updateTask({ description });
+    },
+    [updateTask]
+  );
 
-  const updatePriority = (priority) => {
-    onUpdate(task.id, {
-      ...task,
-      priority,
-    });
+  const updatePriority = useCallback(
+    (priority) => {
+      updateTask({ priority });
+      setShowPriorities(false);
+    },
+    [updateTask]
+  );
 
-    setShowPriorities(false);
-  };
+  const handleTitleChange = useCallback(
+    (e) => {
+      updateTitle(e.target.value);
+      autoResize(e);
+    },
+    [updateTitle]
+  );
+
+  const handleDescriptionChange = useCallback(
+    (e) => {
+      updateDescription(e.target.value);
+      autoResize(e);
+    },
+    [updateDescription]
+  );
 
   return (
     <div
@@ -58,19 +78,19 @@ function TaskCard({
       <input
         type="checkbox"
         checked={task.completed}
-        onChange={onComplete ?? (() => {})}
+        onChange={() => onComplete(task.id)}
       />
 
         <div className="task-card__actions">
           <button
-            onClick={onMoveLeft}
+            onClick={() => onMove("left", task.id)}
             disabled={disableMoveButtons}
           >
             <ArrowLeft size={16} />
           </button>
 
           <button
-            onClick={onMoveRight}
+            onClick={() => onMove("right", task.id)}
             disabled={disableMoveButtons}
           >
             <ArrowRight size={16} />
@@ -91,10 +111,7 @@ function TaskCard({
           className="task-card__title"
           rows={1}
           value={task.title}
-          onChange={(e) => {
-            updateTitle(e.target.value);
-            autoResize(e);
-          }}
+          onChange={handleTitleChange}
         />
 
         <textarea
@@ -102,10 +119,7 @@ function TaskCard({
           rows={2}
           placeholder="Task description..."
           value={task.description}
-          onChange={(e) => {
-            updateDescription(e.target.value);
-            autoResize(e);
-          }}
+          onChange={handleDescriptionChange}
         />
       </div>
 
@@ -137,7 +151,7 @@ function TaskCard({
 
         <button
           className="task-card__delete"
-          onClick={onDelete}
+          onClick={() => onDelete(task.id)}
           aria-label="Delete task"
         >
           <Trash2 size={16} />
@@ -147,5 +161,4 @@ function TaskCard({
   );
 }
 
-export default TaskCard;
-
+export default memo(TaskCard);

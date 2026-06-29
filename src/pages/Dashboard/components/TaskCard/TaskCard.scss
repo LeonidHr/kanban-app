@@ -94,7 +94,7 @@ body {
     color: #8b8b8b;
     font-family: inherit;
     &::placeholder {
-      color: #b3b3b3;
+      color: #757575;
     }
   }
   &__footer {
@@ -130,18 +130,18 @@ body {
     }
 
     &--low {
-      background: #dff4d8;
-      color: #2d7b2d;
+      background: #d6f0d3;
+      color: #2f6d2f;
     }
 
     &--medium {
-      background: #fff2cf;
-      color: #c78b00;
+      background: #f9e3b0;
+      color: #8b5e00;
     }
 
     &--high {
-      background: #ffe2e2;
-      color: #d32f2f;
+      background: #ffd6d6;
+      color: #a10000;
     }
   }
   

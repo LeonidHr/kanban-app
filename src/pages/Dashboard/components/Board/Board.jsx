@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   DndContext,
   PointerSensor,
@@ -10,9 +10,8 @@ import {
 
 import Column from "../Column/Column";
 import TaskCard from "../TaskCard/TaskCard";
-
-// import defaultBoard from "../../../../data/defaultBoard";
-import { saveBoard } from "../../../../utils/storage";
+import transferTask from "../../../../utils/transferTask";
+import BOARD_COLUMNS from "../../../../data/boardColumns";
 
 import "./Board.scss";
 
@@ -22,10 +21,6 @@ function Board({
 }) {
 
   const [activeTask, setActiveTask] = useState(null);
-
-  useEffect(() => {
-    saveBoard(board);
-  }, [board]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -61,15 +56,14 @@ function Board({
 
     if (!task) return;
 
-    setBoard((prev) => ({
-      ...prev,
-
-      [from]: prev[from].filter(
-        (item) => item.id !== active.id
-      ),
-
-      [to]: [ ...prev[to], { ...task, completed: to === "done", }, ],
-    }));
+    setBoard((prev) =>
+      transferTask(
+        prev,
+        from,
+        to,
+        task
+      )
+    );
   };
 
   return (
@@ -80,32 +74,17 @@ function Board({
       onDragEnd={handleDragEnd}
     >
       <div className="board">
-        <Column
-          title="To Do"
-          icon="📝"
-          type="todo"
-          tasks={board.todo}
-          board={board}
-          setBoard={setBoard}
-        />
-
-        <Column
-          title="In Progress"
-          icon="🚀"
-          type="progress"
-          tasks={board.progress}
-          board={board}
-          setBoard={setBoard}
-        />
-
-        <Column
-          title="Done"
-          icon="✅"
-          type="done"
-          tasks={board.done}
-          board={board}
-          setBoard={setBoard}
-        />
+        {BOARD_COLUMNS.map((column) => (
+          <Column
+            key={column.type}
+            title={column.title}
+            icon={column.icon}
+            type={column.type}
+            tasks={board[column.type]}
+            board={board}
+            setBoard={setBoard}
+          />
+        ))}
       </div>
 
       <DragOverlay>

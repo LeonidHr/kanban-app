@@ -1,14 +1,18 @@
+import { useMemo } from "react";
+
 import "./Header.scss";
 
 function Header({ board }) {
-  const totalTasks =
-    board.todo.length +
-    board.progress.length +
-    board.done.length;
+  const { totalTasks, completedTasks } = useMemo(() => {
+    const allTasks = Object.values(board).flat();
 
-  const completedTasks = board.done.filter(
-    (task) => task.completed
-  ).length;
+    return {
+      totalTasks: allTasks.length,
+      completedTasks: allTasks.filter(
+        (task) => task.completed
+      ).length,
+    };
+  }, [board]);
 
   const percent =
     totalTasks === 0

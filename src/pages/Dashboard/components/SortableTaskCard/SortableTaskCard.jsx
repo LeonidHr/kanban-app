@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -23,11 +24,13 @@ function SortableTaskCard(props) {
     },
   });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.25 : 1,
-  };
+  const style = useMemo(
+    () => ({
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.25 : 1,
+    }), [transform, transition, isDragging]
+  );
 
   return (
     <div
@@ -43,4 +46,4 @@ function SortableTaskCard(props) {
   );
 }
 
-export default SortableTaskCard;
+export default memo(SortableTaskCard);

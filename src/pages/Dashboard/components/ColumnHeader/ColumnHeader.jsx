@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import "./ColumnHeader.scss";
 
 function ColumnHeader({ title, icon, count }) {
@@ -13,4 +15,4 @@ function ColumnHeader({ title, icon, count }) {
   );
 }
 
-export default ColumnHeader;
+export default memo(ColumnHeader);

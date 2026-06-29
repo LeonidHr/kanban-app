@@ -1,3 +1,4 @@
+import { memo, useMemo, useCallback } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -7,6 +8,8 @@ import {
 import ColumnHeader from "../ColumnHeader/ColumnHeader";
 import SortableTaskCard from "../SortableTaskCard/SortableTaskCard";
 import AddTaskButton from "../AddTaskButton/AddTaskButton";
+import transferTask from "../../../../utils/transferTask";
+import BOARD_COLUMNS from "../../../../data/boardColumns";
 
 import "./Column.scss";
 
@@ -18,6 +21,7 @@ function Column({
   board,
   setBoard,
 }) {
+
   const { setNodeRef } = useDroppable({
     id: type,
     data: {
@@ -25,111 +29,79 @@ function Column({
     },
   });
 
-  const updateTask = (taskId, updatedTask) => {
+  const sortableItems = useMemo(
+    () => tasks.map((task) => task.id),
+    [tasks]
+  );
+
+  const findTask = useCallback((taskId) => {
+    return tasks.find((task) => task.id === taskId);
+  }, [tasks]);
+
+  const updateTask = useCallback((taskId, updatedTask) => {
     setBoard((prevBoard) => ({
       ...prevBoard,
-
       [type]: prevBoard[type].map((task) =>
         task.id === taskId ? updatedTask : task
       ),
     }));
-  };
+  }, [setBoard, type]);
 
-  const deleteTask = (taskId) => {
+  const deleteTask = useCallback((taskId) => {
     setBoard((prevBoard) => ({
       ...prevBoard,
-
       [type]: prevBoard[type].filter(
         (task) => task.id !== taskId
       ),
     }));
-  };
+  }, [setBoard, type]);
 
-  const moveTask = (direction, taskId) => {
-    const columns = ["todo", "progress", "done"];
+  const moveTask = useCallback((direction, taskId) => {
+    const task = findTask(taskId);
 
-    const currentIndex = columns.indexOf(type);
+    if (!task) return;
 
-    let targetColumn = null;
+    const currentIndex =
+      BOARD_COLUMNS.indexOf(type);
 
-    if (direction === "left" && currentIndex > 0) {
-      targetColumn = columns[currentIndex - 1];
-    }
+    const offset =
+      direction === "left" ? -1 : 1;
 
-    if (
-      direction === "right" &&
-      currentIndex < columns.length - 1
-    ) {
-      targetColumn = columns[currentIndex + 1];
-    }
+    const targetColumn =
+      BOARD_COLUMNS[currentIndex + offset];
 
     if (!targetColumn) return;
 
-    const task = tasks.find((item) => item.id === taskId);
-
-    if (!task) return;
-
-    setBoard((prevBoard) => ({
-      ...prevBoard,
-
-      [type]: prevBoard[type].filter(
-        (item) => item.id !== taskId
-      ),
-
-      [targetColumn]: [
-        ...prevBoard[targetColumn],
-        {
-          ...task,
-          completed: targetColumn === "done",
-        },
-      ],
-    }));
-  };
-
-
-  const toggleComplete = (taskId) => {
-    const task = tasks.find(
-      (item) => item.id === taskId
+    setBoard((prevBoard) =>
+      transferTask(
+        prevBoard,
+        type,
+        targetColumn,
+        task
+      )
     );
+  }, [type, findTask, setBoard]);
+
+
+  const toggleComplete = useCallback((taskId) => {
+    const task = findTask(taskId);
 
     if (!task) return;
 
-    if (type === "done") {
-      setBoard((prevBoard) => ({
-        ...prevBoard,
+    const targetColumn =
+      type === "done"
+        ? "progress"
+        : "done";
 
-        done: prevBoard.done.filter(
-          (item) => item.id !== taskId
-        ),
-
-        progress: [
-          ...prevBoard.progress,
-          {
-            ...task,
-            completed: false,
-          },
-        ],
-      }));
-
-      return;
-    }
-
-    setBoard((prevBoard) => ({
-      ...prevBoard,
-
-      [type]: prevBoard[type].filter(
-        (item) => item.id !== taskId
-      ),
-
-      done: [
-        ...prevBoard.done,
-        {
-          ...task,
-          completed: true,
-        },
-      ],
-    }));
-  };
+    setBoard((prevBoard) =>
+      transferTask(
+        prevBoard,
+        type,
+        targetColumn,
+        task
+      )
+    );
+  }, [type, findTask, setBoard]);
 
   return (
     <div
@@ -143,7 +115,7 @@ function Column({
       />
 
       <SortableContext
-        items={tasks.map((task) => task.id)}
+        items={sortableItems}
         strategy={verticalListSortingStrategy}
       >
         <div className="column__body">
@@ -153,14 +125,10 @@ function Column({
               task={task}
               column={type}
               onUpdate={updateTask}
-              onDelete={() => deleteTask(task.id)}
-              onComplete={() => toggleComplete(task.id)}
-              onMoveLeft={() =>
-                moveTask("left", task.id)
-              }
-              onMoveRight={() =>
-                moveTask("right", task.id)
-              }
+              onDelete={deleteTask}
+              onComplete={toggleComplete}
+              onMove={moveTask}
+              onUpdate={updateTask}
             />
           ))}
         </div>
@@ -175,4 +143,4 @@ function Column({
   );
 }
 
-export default Column;
+export default memo(Column);

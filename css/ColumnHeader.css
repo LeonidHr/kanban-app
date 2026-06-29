@@ -1,0 +1,73 @@
+.column-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.column-header__info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: #f3f3f3;
+  border-radius: 999px;
+}
+.column-header__icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-size: 16px;
+}
+.column-header__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f1f1f;
+}
+.column-header__count {
+  width: 34px;
+  height: 34px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background: #f3f3f3;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f1f1f;
+}
+
+.column--todo .column-header__info,
+.column--todo .column-header__count {
+  background: #dcdcdc;
+}
+
+.column--progress .column-header__info,
+.column--progress .column-header__count {
+  background: #b8dcff;
+}
+
+.column--done .column-header__info,
+.column--done .column-header__count {
+  background: #b8e19f;
+}

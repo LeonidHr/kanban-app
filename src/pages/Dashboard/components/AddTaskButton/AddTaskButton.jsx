@@ -1,26 +1,22 @@
+import { memo, useCallback } from "react";
+
+import defaultTask from "../../../../data/defaultTask";
+
 import "./AddTaskButton.scss";
 
 function AddTaskButton({
   type,
   setBoard,
 }) {
-  const addTask = () => {
-    const newTask = {
-      id: crypto.randomUUID(),
-      title: "New task",
-      description: "",
-      priority: "medium",
-      completed: false,
-    };
-
+  const addTask = useCallback(() => {
     setBoard((prevBoard) => ({
       ...prevBoard,
       [type]: [
         ...prevBoard[type],
-        newTask,
+        defaultTask,
       ],
     }));
-  };
+  }, [type, setBoard]);
 
   return (
     <button
@@ -32,4 +28,4 @@ function AddTaskButton({
   );
 }
 
-export default AddTaskButton;
+export default memo(AddTaskButton);
